@@ -1240,7 +1240,7 @@ def create_webcam_preview(camera_index: int):
     global preview_label, PREVIEW
 
     cap = VideoCapturer(camera_index)
-    if not cap.start(1920, 1080, 60):
+    if not cap.start(640, 480, 30):
         update_status("Failed to start camera")
         return
 
