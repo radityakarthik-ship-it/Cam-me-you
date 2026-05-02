@@ -30,6 +30,92 @@ By using this software, you agree to these terms and commit to using it in a man
 
 Users are expected to use this software responsibly and legally. If using a real person's face, obtain their consent and clearly label any output as a deepfake when sharing online. We are not responsible for end-user actions.
 
+## Quick Setup Guide (Windows — No NVIDIA GPU / Integrated GPU)
+
+> This fork is optimized for machines **without a dedicated NVIDIA GPU**. It uses **DirectML** (Intel/AMD integrated GPU acceleration) and a reduced webcam resolution for smooth real-time performance.
+
+### What You Need
+- Windows 10/11
+- Python 3.12+
+- Git
+- A webcam
+
+### Step 1 — Install Prerequisites (one time)
+
+Install FFmpeg and Visual C++ Build Tools via winget:
+```
+winget install --id Gyan.FFmpeg --silent --accept-source-agreements --accept-package-agreements
+winget install --id Microsoft.VisualStudio.2022.BuildTools --silent --accept-source-agreements --accept-package-agreements --override "--quiet --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+```
+
+Install OBS Studio (needed for Zoom/Teams virtual camera):
+```
+winget install --id OBSProject.OBSStudio --silent --accept-source-agreements --accept-package-agreements
+```
+
+### Step 2 — Clone & Set Up
+
+```
+git clone https://github.com/radityakarthik-ship-it/Cam-me-you.git
+cd Cam-me-you
+python -m venv venv
+```
+
+Install dependencies (use vcvars64 to activate C++ build environment first):
+```
+"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars64.bat" && pip install -r requirements.txt
+```
+
+After install, replace onnxruntime-gpu with DirectML:
+```
+venv\Scripts\pip uninstall onnxruntime-gpu -y
+venv\Scripts\pip install onnxruntime-directml==1.17.3
+```
+
+### Step 3 — Download AI Models
+
+Place these files in the `models` folder:
+- [inswapper_128_fp16.onnx](https://huggingface.co/hacksider/deep-live-cam/resolve/main/inswapper_128_fp16.onnx?download=true) (265 MB)
+- [GFPGANv1.4.pth](https://github.com/TencentARC/GFPGAN/releases/download/v1.3.4/GFPGANv1.4.pth) (333 MB)
+- [gfpgan-1024.onnx](https://huggingface.co/hacksider/deep-live-cam/resolve/main/gfpgan-1024.onnx) (366 MB)
+
+### Step 4 — Create Launch Shortcut
+
+Create a file called `Launch Deep Live Cam.bat` on your Desktop:
+```bat
+@echo off
+set PATH=C:\Users\%USERNAME%\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1-full_build\bin;%PATH%
+cd /d "PATH_TO_YOUR_CLONE"
+start "" "venv\Scripts\python.exe" run.py --execution-provider dml --execution-threads 8
+```
+
+### Step 5 — Every Time You Use It
+
+1. Double-click **Launch Deep Live Cam.bat**
+2. Select your face photo → click **Live**
+3. Open **OBS Studio** → Sources → **+** → **Window Capture** → select `[python.exe]: Preview`
+4. In OBS → click **Start Virtual Camera**
+5. In Zoom/Teams → Settings → Video → select **OBS Virtual Camera**
+
+### Best Settings
+| Setting | Value |
+|---|---|
+| Face Enhancer | None |
+| Map Faces | OFF |
+| Poisson Blend | OFF |
+| Keep FPS | ON |
+| Keep Audio | ON |
+| Execution Provider | dml |
+| Execution Threads | 8–16 |
+
+### Tips
+- Stay **centered** in the camera — face swap loses tracking at extreme angles
+- Use a **front-facing, well-lit** photo for best results
+- Keep Deep Live Cam + OBS **minimized** (not closed) during Zoom calls
+- You can keep OBS and Deep Live Cam on a **separate virtual desktop** (Windows key + Tab)
+
+---
+
 ## Exclusive v2.7 beta Quick Start - Pre-built (Windows/Mac Silicon/CPU)
 
   <a href="https://deeplivecam.net/index.php/quickstart"> <img src="media/Download.png" width="285" height="77" />
