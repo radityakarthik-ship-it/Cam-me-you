@@ -1205,8 +1205,8 @@ def apply_mouth_area(
         adjusted_polygon = mouth_polygon - [min_x, min_y]
         cv2.fillPoly(polygon_mask_roi, [adjusted_polygon.astype(np.int32)], 255)
 
-        # Feather the edges with Gaussian blur for smooth blending
-        feather_amount = max(1, min(30, min(box_width, box_height) // 8))
+        # Feather the edges with Gaussian blur — smaller divisor = crisper lips
+        feather_amount = max(1, min(30, min(box_width, box_height) // 20))
         kernel_size = 2 * feather_amount + 1
         feathered_mask = cv2.GaussianBlur(polygon_mask_roi.astype(np.float32), (kernel_size, kernel_size), 0)
 

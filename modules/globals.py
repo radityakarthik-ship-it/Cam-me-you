@@ -63,7 +63,8 @@ show_mouth_mask_box: bool = False  # Visualize the mouth mask area (for debuggin
 mask_feather_ratio: int = 12       # Denominator for feathering calculation (higher = smaller feather)
 mask_down_size: float = 0.1        # Expansion factor for lower lip mask (relative)
 mask_size: float = 1.0             # Expansion factor for upper lip mask (relative)
-mouth_mask_size: float = 35.0      # Mouth mask size (0-100; 0=off, 100=mouth to chin)
+mouth_mask_size: float = 65.0      # Mouth mask size (0-100; 0=off, 100=mouth to chin)
+mask_blur_kernel: int = 5          # Gaussian blur for mouth mask boundary (smaller = crisper)
 
 # --- START: Added for Frame Interpolation ---
 enable_interpolation: bool = True # Toggle temporal smoothing
