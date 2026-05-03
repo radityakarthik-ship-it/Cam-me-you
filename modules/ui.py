@@ -1121,7 +1121,7 @@ def _processing_thread_func(capture_queue, processed_queue, stop_event,
     cached_many_faces = None
     # Detect every N frames ≈ 80ms.  At 60fps → every 5 frames (83ms),
     # at 30fps → every 3 frames (100ms), at 15fps → every frame.
-    det_interval = max(1, round(camera_fps * 0.08))
+    det_interval = max(2, round(camera_fps * 0.13))
 
     while not stop_event.is_set():
         try:
@@ -1139,15 +1139,16 @@ def _processing_thread_func(capture_queue, processed_queue, stop_event,
                 last_source_path = modules.globals.source_path
                 source_image = get_one_face(cv2.imread(modules.globals.source_path))
 
-            # Run detection every det_interval frames (~80ms).
-            # Use fast detection (det-only, no landmark/recognition) for live mode.
+            # When mouth_mask is on, run full landmark detection every frame
+            # so lip position is always current (detect_one_face_fast skips landmarks).
+            need_landmarks = getattr(modules.globals, 'mouth_mask', False)
             det_count += 1
-            if det_count % det_interval == 0:
+            if need_landmarks or det_count % det_interval == 0:
                 if modules.globals.many_faces:
                     cached_target_face = None
-                    cached_many_faces = detect_many_faces_fast(temp_frame)
+                    cached_many_faces = get_many_faces(temp_frame)
                 else:
-                    cached_target_face = detect_one_face_fast(temp_frame)
+                    cached_target_face = get_one_face(temp_frame)
                     cached_many_faces = None
 
             # Build face list for enhancers from cached detection
@@ -1240,7 +1241,7 @@ def create_webcam_preview(camera_index: int):
     global preview_label, PREVIEW
 
     cap = VideoCapturer(camera_index)
-    if not cap.start(640, 480, 30):
+    if not cap.start(960, 540, 30):
         update_status("Failed to start camera")
         return
 

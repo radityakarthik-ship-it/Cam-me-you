@@ -55,15 +55,15 @@ fp_ui: Dict[str, bool] = {"face_enhancer": False, "face_enhancer_gpen256": False
 # Face Swapper Specific Options
 face_swapper_enabled: bool = True # General toggle for the swapper processor
 opacity: float = 1.0              # Blend factor for the swapped face (0.0-1.0)
-sharpness: float = 0.0            # Sharpness enhancement for swapped face (0.0-1.0+)
+sharpness: float = 0.4            # Sharpness enhancement for swapped face (0.0-1.0+)
 
 # Mouth Mask Options
-mouth_mask: bool = False           # Enable mouth area masking/pasting
+mouth_mask: bool = True            # Enable mouth area masking/pasting (preserves real lip movements)
 show_mouth_mask_box: bool = False  # Visualize the mouth mask area (for debugging)
 mask_feather_ratio: int = 12       # Denominator for feathering calculation (higher = smaller feather)
 mask_down_size: float = 0.1        # Expansion factor for lower lip mask (relative)
 mask_size: float = 1.0             # Expansion factor for upper lip mask (relative)
-mouth_mask_size: float = 0.0       # Mouth mask size (0-100; 0=off, 100=mouth to chin)
+mouth_mask_size: float = 35.0      # Mouth mask size (0-100; 0=off, 100=mouth to chin)
 
 # --- START: Added for Frame Interpolation ---
 enable_interpolation: bool = True # Toggle temporal smoothing
