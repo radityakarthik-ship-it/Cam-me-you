@@ -1139,16 +1139,15 @@ def _processing_thread_func(capture_queue, processed_queue, stop_event,
                 last_source_path = modules.globals.source_path
                 source_image = get_one_face(cv2.imread(modules.globals.source_path))
 
-            # When mouth_mask is on, run full landmark detection every frame
-            # so lip position is always current (detect_one_face_fast skips landmarks).
-            need_landmarks = getattr(modules.globals, 'mouth_mask', False)
+            # Run detection every det_interval frames (~80ms).
+            # Use fast detection (det-only, no landmark/recognition) for live mode.
             det_count += 1
-            if need_landmarks or det_count % det_interval == 0:
+            if det_count % det_interval == 0:
                 if modules.globals.many_faces:
                     cached_target_face = None
-                    cached_many_faces = get_many_faces(temp_frame)
+                    cached_many_faces = detect_many_faces_fast(temp_frame)
                 else:
-                    cached_target_face = get_one_face(temp_frame)
+                    cached_target_face = detect_one_face_fast(temp_frame)
                     cached_many_faces = None
 
             # Build face list for enhancers from cached detection

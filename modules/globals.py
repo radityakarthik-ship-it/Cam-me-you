@@ -58,7 +58,7 @@ opacity: float = 1.0              # Blend factor for the swapped face (0.0-1.0)
 sharpness: float = 0.4            # Sharpness enhancement for swapped face (0.0-1.0+)
 
 # Mouth Mask Options
-mouth_mask: bool = True            # Enable mouth area masking/pasting (preserves real lip movements)
+mouth_mask: bool = False           # Enable mouth area masking/pasting (preserves real lip movements)
 show_mouth_mask_box: bool = False  # Visualize the mouth mask area (for debugging)
 mask_feather_ratio: int = 12       # Denominator for feathering calculation (higher = smaller feather)
 mask_down_size: float = 0.1        # Expansion factor for lower lip mask (relative)
